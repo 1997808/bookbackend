@@ -2,13 +2,38 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 
+// const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(
+  session({
+    key: "userID",
+    secret: "subscription",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60,
+    },
+  })
+);
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -23,12 +48,20 @@ db.connect(function (err) {
   console.log("Connected!");
 });
 
-app.get("/account", (req, res) => {
-  db.query("SELECT * FROM account", function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-  });
+app.get("/login", (req, res) => {
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
 });
+
+// app.get("/logout", (req, res) => {
+//   res.cookie("token", "none", {
+//     expires: new Date(Date.now() + 1 * 1000),
+//     httpOnly: true,
+//   });
+// });
 
 app.post("/signup", (req, res) => {
   const username = req.body.username;
@@ -63,7 +96,6 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log("login attempt");
   const username = req.body.username;
   const password = req.body.password;
   db.query(
@@ -77,6 +109,7 @@ app.post("/login", (req, res) => {
       if (result.length > 0) {
         bcrypt.compare(password, result[0].password, (error, response) => {
           if (response) {
+            req.session.user = result;
             res.send(result[0].accountType);
           } else {
             res.send({ message: "Wrong username or password" });
