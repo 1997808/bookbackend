@@ -9,6 +9,8 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+const jwt = require("jsonwebtoken");
+
 const app = express();
 
 app.use(express.json());
@@ -48,6 +50,26 @@ db.connect(function (err) {
   console.log("Connected!");
 });
 
+const verifyJWT = (req, res, next) => {
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    res.send("no token");
+  } else {
+    jwt.verify(token, "jwtSecret", (err, decoded) => {
+      if (err) {
+        res.json({ auth: false, message: "U failed to auth" });
+      } else {
+        req.userID = decoded.id;
+        next();
+      }
+    });
+  }
+};
+
+app.get("/getalldata", verifyJWT, (req, res) => {
+  res.send("you admin");
+});
+
 app.get("/login", (req, res) => {
   if (req.session.user) {
     res.send({ loggedIn: true, user: req.session.user });
@@ -55,13 +77,6 @@ app.get("/login", (req, res) => {
     res.send({ loggedIn: false });
   }
 });
-
-// app.get("/logout", (req, res) => {
-//   res.cookie("token", "none", {
-//     expires: new Date(Date.now() + 1 * 1000),
-//     httpOnly: true,
-//   });
-// });
 
 app.post("/signup", (req, res) => {
   const username = req.body.username;
@@ -110,13 +125,23 @@ app.post("/login", (req, res) => {
         bcrypt.compare(password, result[0].password, (error, response) => {
           if (response) {
             req.session.user = result;
-            res.send(result[0].accountType);
+
+            const id = result[0].accountID;
+            const token = jwt.sign({ id }, "jwtSecret", {
+              expiresIn: 60 * 60,
+            });
+            res.json({
+              auth: true,
+              token: token,
+              role: result[0].accountType,
+            });
+            // res.send(result[0].accountType);
           } else {
-            res.send({ message: "Wrong username or password" });
+            res.send({ auth: false, message: "Wrong username or password" });
           }
         });
       } else {
-        res.send({ message: "Not exist" });
+        res.send({ auth: false, message: "Not exist" });
       }
     }
   );
