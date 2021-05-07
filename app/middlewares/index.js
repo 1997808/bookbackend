@@ -1,11 +1,12 @@
 const jwt = require("jsonwebtoken");
+const { jwtSecret } = require("../config/config");
 
 const verifyJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];
   if (!token) {
     res.send("no token");
   } else {
-    jwt.verify(token, "jwtSecret", (err, decoded) => {
+    jwt.verify(token, jwtSecret, (err, decoded) => {
       if (err) {
         res.json({ auth: false, message: "U failed to auth" });
       } else {

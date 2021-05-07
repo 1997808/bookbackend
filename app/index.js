@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
+const { port } = require("./config/config");
 
 // const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const userRoute = require("./routes/UserRoute");
-
-require("dotenv").config();
 
 const app = express();
 
@@ -36,6 +36,6 @@ app.use(
 
 app.use("/", userRoute);
 
-app.listen(3001, () => {
+app.listen(port, () => {
   console.log("server running");
 });
