@@ -87,4 +87,6 @@ const loginController = {
   },
 };
 
-module.exports = loginController;
+module.exports = {
+  loginController,
+};
