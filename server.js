@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60,
+      maxAge: 1000 * 60 * 30,
     },
   })
 );
