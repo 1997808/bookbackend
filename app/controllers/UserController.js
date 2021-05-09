@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 const db = require("../config/database");
 
 const loginController = {
-  getAllData(req, res) {
-    res.send("you admin");
-  },
+  // getAllData(req, res) {
+  //   res.send("you admin");
+  // },
 
   checkLogin(req, res) {
     if (req.session.user) {
@@ -71,7 +71,7 @@ const loginController = {
 
               const id = result[0].accountID;
               const token = jwt.sign({ id }, "jwtSecret", {
-                expiresIn: 60 * 60,
+                expiresIn: 60 * 30 * 1000,
               });
               res.json({
                 auth: true,
@@ -98,7 +98,24 @@ const loginController = {
     }
   },
 };
+const userDataController = {
+  getUserData(req, res) {
+    if (req.params.userID != undefined) {
+      const accountID = req.params.userID;
+      db.query(
+        `SELECT * FROM account WHERE accountID = ${accountID};`,
+        function (err, result) {
+          if (err) {
+            res.send({ err: err });
+          }
+          res.send(result[0]);
+        }
+      );
+    } else res.send({ message: "user id gone" });
+  },
+};
 
 module.exports = {
   loginController,
+  userDataController,
 };

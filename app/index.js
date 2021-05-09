@@ -3,10 +3,11 @@ const cors = require("cors");
 require("dotenv").config();
 const { port } = require("./config/config");
 
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const userRoute = require("./routes/UserRoute");
+const adminRoute = require("./routes/AdminRoute");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(
 );
 
 app.use("/", userRoute);
+app.use("/admin", adminRoute);
 
 app.listen(port, () => {
   console.log("server running");
