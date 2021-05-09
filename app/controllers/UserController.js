@@ -76,9 +76,9 @@ const loginController = {
               res.json({
                 auth: true,
                 token: token,
+                accountID: result[0].accountID,
                 role: result[0].accountType,
               });
-              // res.send(result[0].accountType);
             } else {
               res.send({ auth: false, message: "Wrong username or password" });
             }
@@ -88,6 +88,14 @@ const loginController = {
         }
       }
     );
+  },
+
+  logout(req, res) {
+    if (req.session.user) {
+      req.session.destroy(() => {
+        res.clearCookie("userID").status(200).send("Cookie bye bye");
+      });
+    }
   },
 };
 
