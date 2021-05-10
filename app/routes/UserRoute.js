@@ -7,7 +7,8 @@ const {
 const { verifyJWT } = require("../middlewares");
 
 // router.get("/getalldata", verifyJWT, loginController.getAllData);
-router.get("/getuserdata/:userID", verifyJWT, userDataController.getUserData);
+router.get("/user/:userID", verifyJWT, userDataController.getUserData);
+router.put("/user/:userID", verifyJWT, userDataController.changeUserData);
 router.post("/signup", loginController.signUp);
 router.get("/login", loginController.checkLogin);
 router.post("/login", loginController.login);
