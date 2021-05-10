@@ -89,7 +89,7 @@ const loginController = {
   logout(req, res) {
     if (req.session.user) {
       req.session.destroy(() => {
-        res.clearCookie("userID").status(200).send("Cookie bye bye");
+        res.clearCookie("userID").send("Cookie bye bye");
       });
     }
   },
@@ -129,7 +129,6 @@ const userDataController = {
             await db.query(
               `UPDATE user SET name = "${name}", email = "${email}", phone = ${phone}, city = "${city}", address = "${address}" WHERE accountID = ${accountID};`,
               function (err, result) {
-                console.log("update");
                 if (err) {
                   res.send({ err: err });
                 }
@@ -141,7 +140,6 @@ const userDataController = {
               `INSERT INTO user (accountID, name, email, phone, city, address) VALUES (?,?,?,?,?,?)`,
               [accountID, name, email, phone, city, address],
               function (err, result, fields) {
-                console.log("add new");
                 if (err) throw err;
                 res.send(result);
               }
