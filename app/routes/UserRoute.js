@@ -2,13 +2,12 @@ const express = require("express");
 const router = express.Router();
 const {
   loginController,
-  userDataController,
+  userController,
 } = require("../controllers/UserController");
 const { verifyJWT } = require("../middlewares");
 
-// router.get("/getalldata", verifyJWT, loginController.getAllData);
-router.get("/user/:userID", verifyJWT, userDataController.getUserData);
-router.put("/user/:userID", verifyJWT, userDataController.changeUserData);
+router.get("/user/:userID", verifyJWT, userController.getUserData);
+router.put("/user/:userID", verifyJWT, userController.changeUserData);
 router.post("/signup", loginController.signUp);
 router.get("/login", loginController.checkLogin);
 router.post("/login", loginController.login);

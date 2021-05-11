@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { UserDataController } = require("../controllers/AdminController");
+const {
+  userDataController,
+  categoryDataController,
+  bookDataController,
+} = require("../controllers/AdminController");
 const { verifyJWT } = require("../middlewares");
 
-router.get("/user", verifyJWT, UserDataController.getAllUser);
-// router.post("/signup", loginController.signUp);
-// router.get("/login", loginController.checkLogin);
-// router.post("/login", loginController.login);
-// router.get("/logout", loginController.logout);
+router.get("/user", verifyJWT, userDataController.getAllUser);
+router.get("/category", verifyJWT, categoryDataController.getAllCategory);
+router.post("/category", verifyJWT, categoryDataController.addCategory);
+router.get("/book", verifyJWT, bookDataController.getAllBook);
+router.post("/book", verifyJWT, bookDataController.addBook);
 
 module.exports = router;

@@ -94,7 +94,7 @@ const loginController = {
     }
   },
 };
-const userDataController = {
+const userController = {
   async getUserData(req, res) {
     if (req.params.userID != undefined) {
       const accountID = req.params.userID;
@@ -132,7 +132,7 @@ const userDataController = {
                 if (err) {
                   res.send({ err: err });
                 }
-                res.send(result.changedRows);
+                res.send({ result: result.changedRows });
               }
             );
           } else {
@@ -153,5 +153,5 @@ const userDataController = {
 
 module.exports = {
   loginController,
-  userDataController,
+  userController,
 };
