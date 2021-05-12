@@ -11,7 +11,8 @@ router.get("/user", verifyJWT, userDataController.getAllUser);
 router.get("/category", verifyJWT, categoryDataController.getAllCategory);
 router.post("/category", verifyJWT, categoryDataController.addCategory);
 router.get("/book", verifyJWT, bookDataController.getAllBook);
-router.get("/book/:id", verifyJWT, bookDataController.getBook);
+router.get("/book/:id", verifyJWT, bookDataController.getBookData);
+router.put("/book/:id", verifyJWT, bookDataController.changeBookData);
 router.post("/book", verifyJWT, bookDataController.addBook);
 
 module.exports = router;

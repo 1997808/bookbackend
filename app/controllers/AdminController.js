@@ -53,9 +53,9 @@ const categoryDataController = {
 };
 
 const bookDataController = {
-  getAllBook(req, res) {
+  async getAllBook(req, res) {
     var sql = "SELECT * FROM book;";
-    db.query(sql, function (err, result) {
+    await db.query(sql, function (err, result) {
       if (err) {
         res.send({ err: err });
       }
@@ -63,9 +63,9 @@ const bookDataController = {
     });
   },
 
-  addBook(req, res) {
+  async addBook(req, res) {
     const name = req.body.name;
-    db.query(
+    await db.query(
       "SELECT * FROM book WHERE name = ?;",
       name,
       function (err, result) {
@@ -114,16 +114,61 @@ const bookDataController = {
     );
   },
 
-  getBook(req, res) {
+  async getBookData(req, res) {
     if (req.params.id != undefined) {
       const id = req.params.id;
-      db.query("SELECT * FROM book WHERE id = ?;", id, function (err, result) {
-        if (err) {
-          res.send({ err: err });
+      await db.query(
+        "SELECT * FROM book WHERE id = ?;",
+        id,
+        function (err, result) {
+          if (err) {
+            res.send({ err: err });
+          }
+          res.send({ result });
         }
-        res.send({ result });
-      });
+      );
     }
+  },
+
+  async changeBookData(req, res) {
+    if (req.params.id != undefined) {
+      const id = req.params.id;
+      const {
+        categoryID,
+        name,
+        image,
+        author,
+        translator,
+        publisher,
+        pages,
+        size,
+        price,
+        discount,
+        stock,
+        description,
+      } = req.body;
+
+      await db.query(
+        `SELECT * FROM book WHERE id = ?;`,
+        id,
+        async function (err, result) {
+          if (err) {
+            res.send({ err: err });
+          }
+          if (result.length > 0) {
+            await db.query(
+              `UPDATE book SET categoryID = "${categoryID}", name = "${name}", image = "${image}", author = "${author}", translator = "${translator}", publisher = "${publisher}", pages = ${pages}, size = "${size}", price = ${price}, discount = ${discount}, stock = ${stock}, description='${description}' WHERE id = ${id};`,
+              function (err, result) {
+                if (err) {
+                  res.send({ err: err });
+                }
+                res.send({ result });
+              }
+            );
+          } else res.send({ message: "book not exist" });
+        }
+      );
+    } else res.send({ message: "book id gone" });
   },
 };
 
