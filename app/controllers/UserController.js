@@ -151,7 +151,31 @@ const userController = {
   },
 };
 
+const bookController = {
+  async getAllBook(req, res) {
+    var sql = "SELECT * FROM book;";
+    await db.query(sql, function (err, result) {
+      if (err) {
+        res.send({ err: err });
+      }
+      res.send({ result });
+    });
+  },
+
+  async getOneBook(req, res) {
+    const id = req.params.bookID;
+    var sql = `SELECT * FROM book WHERE id = ${id};`;
+    await db.query(sql, function (err, result) {
+      if (err) {
+        res.send({ err: err });
+      }
+      res.send({ result });
+    });
+  },
+};
+
 module.exports = {
   loginController,
   userController,
+  bookController,
 };
