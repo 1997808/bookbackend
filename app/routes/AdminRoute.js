@@ -14,5 +14,6 @@ router.get("/book", verifyJWT, bookDataController.getAllBook);
 router.get("/book/:id", verifyJWT, bookDataController.getBookData);
 router.put("/book/:id", verifyJWT, bookDataController.changeBookData);
 router.post("/book", verifyJWT, bookDataController.addBook);
+router.get("/searchbook/:input", bookDataController.searchBook);
 
 module.exports = router;

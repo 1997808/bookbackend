@@ -130,6 +130,19 @@ const bookDataController = {
     }
   },
 
+  async searchBook(req, res) {
+    if (req.params.input != undefined) {
+      const input = req.params.input;
+      var sql = `SELECT DISTINCT * FROM book WHERE id = ${input} OR name = ${input};`;
+      await db.query(sql, function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        res.send({ result });
+      });
+    }
+  },
+
   async changeBookData(req, res) {
     if (req.params.id != undefined) {
       const id = req.params.id;
