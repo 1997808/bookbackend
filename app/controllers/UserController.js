@@ -172,6 +172,17 @@ const bookController = {
       res.send({ result });
     });
   },
+
+  async getNewBook(req, res) {
+    const limit = req.params.limit;
+    var sql = `SELECT * FROM book ORDER BY id DESC LIMIT ${limit};`;
+    await db.query(sql, function (err, result) {
+      if (err) {
+        res.send({ err: err });
+      }
+      res.send({ result });
+    });
+  },
 };
 
 module.exports = {

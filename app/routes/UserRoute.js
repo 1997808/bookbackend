@@ -15,5 +15,6 @@ router.get("/user/:userID", verifyJWT, userController.getUserData);
 router.put("/user/:userID", verifyJWT, userController.changeUserData);
 router.get("/book", bookController.getAllBook);
 router.get("/book/:bookID", bookController.getOneBook);
+router.get("/newbook/:limit", bookController.getNewBook);
 
 module.exports = router;
