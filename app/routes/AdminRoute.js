@@ -8,6 +8,7 @@ const {
 const { verifyJWT } = require("../middlewares");
 
 router.get("/user", verifyJWT, userDataController.getAllUser);
+router.get("/searchuser/:input", verifyJWT, userDataController.searchUser);
 router.get("/category", verifyJWT, categoryDataController.getAllCategory);
 router.post("/category", verifyJWT, categoryDataController.addCategory);
 router.get("/book", verifyJWT, bookDataController.getAllBook);

@@ -116,7 +116,6 @@ const userController = {
     if (req.params.userID != undefined) {
       const accountID = req.params.userID;
       const { name, email, phone, city, address } = req.body;
-      console.log(req.body);
 
       await db.query(
         `SELECT * FROM user WHERE accountID = ?;`,

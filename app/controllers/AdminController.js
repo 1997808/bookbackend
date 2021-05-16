@@ -1,15 +1,30 @@
 const db = require("../config/database");
 
 const userDataController = {
-  getAllUser(req, res) {
+  async getAllUser(req, res) {
     var sql =
       "SELECT account.accountID, account.username, user.name, user.phone, user.city FROM account LEFT JOIN user ON account.accountID = user.accountID WHERE account.accountType = 'user'";
-    db.query(sql, function (err, result) {
+    await db.query(sql, function (err, result) {
       if (err) {
         res.send({ err: err });
       }
       res.send({ result });
     });
+  },
+
+  async searchUser(req, res) {
+    if (req.params.input != undefined) {
+      const input = req.params.input;
+      var sql = `SELECT DISTINCT account.accountID, account.username, user.name, user.phone, user.city FROM account LEFT JOIN user ON account.accountID = user.accountID WHERE user.phone LIKE "%${input}%";`;
+      await db.query(sql, function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        if (result.length > 0) {
+          res.send({ result });
+        } else res.send({ message: "No data" });
+      });
+    }
   },
 };
 
@@ -133,12 +148,14 @@ const bookDataController = {
   async searchBook(req, res) {
     if (req.params.input != undefined) {
       const input = req.params.input;
-      var sql = `SELECT DISTINCT * FROM book WHERE id = ${input} OR name = ${input};`;
+      var sql = `SELECT DISTINCT * FROM book WHERE id LIKE "%${input}%" OR name LIKE "%${input}%";`;
       await db.query(sql, function (err, result) {
         if (err) {
           res.send({ err: err });
         }
-        res.send({ result });
+        if (result.length > 0) {
+          res.send({ result });
+        } else res.send({ message: "No data" });
       });
     }
   },
