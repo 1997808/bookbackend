@@ -30,7 +30,9 @@ const userDataController = {
 
 const categoryDataController = {
   getAllCategory(req, res) {
-    var sql = "SELECT * FROM category;";
+    var sql =
+      "Select category.categoryID, category.name, A.count From category Left Join (SELECT book.categoryID, Count(*) as count FROM book Group by book.categoryID) as A on category.categoryID = A.categoryID ;";
+    // var sql = "SELECT * FROM category;";
     db.query(sql, function (err, result) {
       if (err) {
         res.send({ err: err });

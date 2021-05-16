@@ -4,6 +4,7 @@ const {
   loginController,
   userController,
   bookController,
+  categoryController,
 } = require("../controllers/UserController");
 const { verifyJWT } = require("../middlewares");
 
@@ -16,5 +17,7 @@ router.put("/user/:userID", verifyJWT, userController.changeUserData);
 router.get("/book", bookController.getAllBook);
 router.get("/book/:bookID", bookController.getOneBook);
 router.get("/newbook/:limit", bookController.getNewBook);
+router.get("/category", categoryController.getAllCategory);
+router.get("/category/:categoryID", categoryController.getCategoryBook);
 
 module.exports = router;
