@@ -16,6 +16,7 @@ router.get("/user/:userID", verifyJWT, userController.getUserData);
 router.put("/user/:userID", verifyJWT, userController.changeUserData);
 router.get("/book", bookController.getAllBook);
 router.get("/book/:bookID", bookController.getOneBook);
+router.get("/searchbook/:input", bookController.searchBook);
 router.get("/newbook/:limit", bookController.getNewBook);
 router.get("/category", categoryController.getAllCategory);
 router.get("/category/:categoryID", categoryController.getCategoryBook);

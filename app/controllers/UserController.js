@@ -185,6 +185,21 @@ const bookController = {
     });
   },
 
+  async searchBook(req, res) {
+    if (req.params.input != undefined) {
+      const input = req.params.input;
+      var sql = `SELECT DISTINCT * FROM book WHERE name LIKE "%${input}%";`;
+      await db.query(sql, function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        if (result.length > 0) {
+          res.send({ result });
+        } else res.send({ message: "No data" });
+      });
+    }
+  },
+
   async getOneBook(req, res) {
     const id = req.params.bookID;
     var sql = `SELECT * FROM book WHERE id = ${id};`;
