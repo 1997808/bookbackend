@@ -223,9 +223,43 @@ const bookController = {
   },
 };
 
+const orderController = {
+  addOrder(req, res) {
+    // console.log(req.body);
+    const {
+      userID,
+      name,
+      phone,
+      city,
+      address,
+      note,
+      shipping,
+      saleCode,
+      paymentMethod,
+    } = req.body.formData;
+
+    const { data } = req.body;
+    var value = "";
+    for (var i = 0; i < data.length; i++) {
+      value += "(" + data[i].id + "," + data[i].qty + "), ";
+    }
+    console.log(userID);
+
+    // db.query(
+    //   "INSERT INTO orders (userID, password, accountType) VALUES (?,?,?)",
+    //   [username, hash, accountType],
+    //   function (err, result, fields) {
+    //     if (err) throw err;
+    //     res.send({ message: result });
+    //   }
+    // );
+  },
+};
+
 module.exports = {
   loginController,
   userController,
   bookController,
   categoryController,
+  orderController,
 };

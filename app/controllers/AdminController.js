@@ -92,17 +92,20 @@ const bookDataController = {
         if (result.length !== 0) {
           res.send({ message: "Already exist" });
         } else {
-          const categoryID = req.body.categoryID;
-          const image = req.body.image;
-          const author = req.body.author;
-          const translator = req.body.translator;
-          const publisher = req.body.publisher;
-          const pages = req.body.pages;
-          const size = req.body.size;
-          const price = req.body.price;
-          const discount = req.body.discount;
-          const stock = req.body.stock;
-          const description = req.body.description;
+          const {
+            categoryID,
+            image,
+            name,
+            author,
+            translator,
+            publisher,
+            pages,
+            size,
+            price,
+            discount,
+            stock,
+            description,
+          } = req.body;
           db.query(
             "INSERT INTO book (categoryID, image, name, author, translator, publisher, pages, size, price, discount, stock, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [

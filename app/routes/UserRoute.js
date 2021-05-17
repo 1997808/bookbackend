@@ -5,6 +5,7 @@ const {
   userController,
   bookController,
   categoryController,
+  orderController,
 } = require("../controllers/UserController");
 const { verifyJWT } = require("../middlewares");
 
@@ -20,5 +21,6 @@ router.get("/searchbook/:input", bookController.searchBook);
 router.get("/newbook/:limit", bookController.getNewBook);
 router.get("/category", categoryController.getAllCategory);
 router.get("/category/:categoryID", categoryController.getCategoryBook);
+router.post("/order", orderController.addOrder);
 
 module.exports = router;
