@@ -2,7 +2,7 @@ const db = require("../../config/database");
 const { CartSum } = require("../../util/totalSum");
 
 const orderController = {
-  addOrder(req, res) {
+  async addOrder(req, res) {
     // console.log(req.body);
     const { accountID } = req.body;
     const {
@@ -17,10 +17,10 @@ const orderController = {
     } = req.body.formData;
     const { data } = req.body;
 
-    const date = new Date().toISOString().slice(0, 19).replace("T", " ");
-    const total = CartSum(data);
+    var date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    var total = CartSum(data);
 
-    db.query(
+    await db.query(
       "INSERT INTO orders (accountID, name, phone, city, address, note, shipping, saleCode, paymentMethod, total, date) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?)",
       [
         accountID,
@@ -35,18 +35,19 @@ const orderController = {
         total,
         date,
       ],
-      function (err, result, fields) {
+      async function (err, result, fields) {
         if (err) {
           res.send({ err: err });
         }
         if (result.affectedRows) {
           var value = "";
+          var orderID = result.insertId;
           for (var i = 0; i < data.length; i++) {
             value +=
               "(" +
               data[i].id +
               ", " +
-              result.insertId +
+              orderID +
               ", " +
               data[i].discount +
               ", " +
@@ -55,14 +56,19 @@ const orderController = {
               value += ")";
             } else value += "), ";
           }
-          console.log(value);
-          db.query(
+          await db.query(
             `INSERT INTO orderitem (bookID, orderID, discount, quantity) VALUES ${value};`,
             function (err, result, fields) {
               if (err) {
                 res.send({ err: err });
-              }
-              res.send(result);
+              } else
+                res.send({
+                  orderData: req.body,
+                  orderID: orderID,
+                  total: total,
+                  date: date,
+                  success: true,
+                });
             }
           );
         }

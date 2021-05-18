@@ -4,7 +4,7 @@ function CartSum(data) {
     total = 0;
   } else {
     data.map((items) => {
-      let discount = 100 - items.discount;
+      let discount = (100 - items.discount) / 100;
       total += items.price * items.qty * discount;
       return 0;
     });
