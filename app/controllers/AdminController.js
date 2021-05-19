@@ -1,6 +1,6 @@
-const { userDataController } = require("../controllers/admin/userData");
-const { categoryDataController } = require("../controllers/admin/categoryData");
-const { bookDataController } = require("../controllers/admin/bookData");
+const { userDataController } = require("./admin/userData");
+const { categoryDataController } = require("./admin/categoryData");
+const { bookDataController } = require("./admin/bookData");
 
 module.exports = {
   userDataController,
