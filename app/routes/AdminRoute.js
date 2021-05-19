@@ -4,6 +4,7 @@ const {
   userDataController,
   categoryDataController,
   bookDataController,
+  orderDataController,
 } = require("../controllers/AdminController");
 const { verifyJWT } = require("../middlewares");
 
@@ -16,5 +17,8 @@ router.get("/book/:id", verifyJWT, bookDataController.getBookData);
 router.put("/book/:id", verifyJWT, bookDataController.changeBookData);
 router.post("/book", verifyJWT, bookDataController.addBook);
 router.get("/searchbook/:input", bookDataController.searchBook);
+router.get("/order", verifyJWT, orderDataController.getAllOrder);
+router.get("/order/:id", verifyJWT, orderDataController.getOneOrder);
+router.get("/orderitem/:id", verifyJWT, orderDataController.getOneOrderItem);
 
 module.exports = router;
