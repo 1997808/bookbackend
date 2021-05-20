@@ -20,6 +20,7 @@ router.get("/searchbook/:input", bookDataController.searchBook);
 router.get("/order", verifyJWT, orderDataController.getAllOrder);
 router.get("/order/:id", verifyJWT, orderDataController.getOneOrder);
 router.get("/orderitem/:id", verifyJWT, orderDataController.getOneOrderItem);
+router.get("/orderitem", verifyJWT, orderDataController.getAllOrderItem);
 router.get("/searchorder/:input", verifyJWT, orderDataController.searchOrder);
 
 module.exports = router;

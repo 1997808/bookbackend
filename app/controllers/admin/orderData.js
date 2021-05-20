@@ -22,6 +22,16 @@ const orderDataController = {
     });
   },
 
+  async getAllOrderItem(req, res) {
+    var sql = `SELECT * FROM orderitem;`;
+    await db.query(sql, function (err, result) {
+      if (err) {
+        res.send({ err: err });
+      }
+      res.send({ result });
+    });
+  },
+
   async getOneOrderItem(req, res) {
     const id = req.params.id;
     var sql = `SELECT itemID, orderitem.discount, orderitem.quantity, name, price FROM orderitem LEFT JOIN book ON orderitem.bookID = book.id WHERE orderID = ${id};`;
