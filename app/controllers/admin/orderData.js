@@ -32,6 +32,21 @@ const orderDataController = {
       res.send({ result });
     });
   },
+
+  async searchOrder(req, res) {
+    if (req.params.input != undefined) {
+      const input = req.params.input;
+      var sql = `SELECT DISTINCT * FROM orders WHERE orderID LIKE "%${input}%" OR phone LIKE "%${input}%";`;
+      await db.query(sql, function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        if (result.length > 0) {
+          res.send({ result });
+        } else res.send({ message: "No data" });
+      });
+    }
+  },
 };
 
 module.exports = {
