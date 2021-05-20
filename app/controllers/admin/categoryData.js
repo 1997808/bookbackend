@@ -1,11 +1,11 @@
 const db = require("../../config/database");
 
 const categoryDataController = {
-  getAllCategory(req, res) {
+  async getAllCategory(req, res) {
     var sql =
       "Select category.categoryID, category.name, A.count From category Left Join (SELECT book.categoryID, Count(*) as count FROM book Group by book.categoryID) as A on category.categoryID = A.categoryID ;";
     // var sql = "SELECT * FROM category;";
-    db.query(sql, function (err, result) {
+    await db.query(sql, function (err, result) {
       if (err) {
         res.send({ err: err });
       }
@@ -13,19 +13,19 @@ const categoryDataController = {
     });
   },
 
-  addCategory(req, res) {
+  async addCategory(req, res) {
     const name = req.body.name;
-    db.query(
+    await db.query(
       "SELECT * FROM category WHERE name = ?;",
       name,
-      function (err, result) {
+      async function (err, result) {
         if (err) {
           res.send({ err: err });
         }
         if (result.length !== 0) {
           res.send({ message: "Already exist" });
         } else {
-          db.query(
+          await db.query(
             "INSERT INTO category (name) VALUES (?)",
             name,
             function (err, result) {

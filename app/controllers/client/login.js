@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../../config/database");
 
 const loginController = {
-  checkLogin(req, res) {
+  async checkLogin(req, res) {
     if (req.session.user) {
       res.send({
         loggedIn: true,
@@ -17,12 +17,12 @@ const loginController = {
     }
   },
 
-  signUp(req, res) {
+  async signUp(req, res) {
     const username = req.body.username;
     const password = req.body.password;
     const accountType = "user";
 
-    db.query(
+    await db.query(
       "SELECT * FROM account WHERE username = ?;",
       username,
       function (err, result, fields) {
@@ -51,10 +51,10 @@ const loginController = {
     );
   },
 
-  login(req, res) {
+  async login(req, res) {
     const username = req.body.username;
     const password = req.body.password;
-    db.query(
+    await db.query(
       "SELECT * FROM account WHERE username = ?;",
       username,
       function (err, result, fields) {
@@ -88,7 +88,7 @@ const loginController = {
     );
   },
 
-  logout(req, res) {
+  async logout(req, res) {
     if (req.session.user) {
       req.session.destroy(() => {
         res.clearCookie("userID").send("Cookie bye bye");
