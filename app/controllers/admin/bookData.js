@@ -136,6 +136,27 @@ const bookDataController = {
       );
     } else res.send({ message: "book id gone" });
   },
+
+  async importBookStock(req, res) {
+    const { data } = req.body;
+    let value = "";
+    for (var i = 0; i < data.length; i++) {
+      value += "(" + data[i].id + ", " + data[i].qty;
+      if (i === data.length - 1) {
+        value += ")";
+      } else value += "), ";
+    }
+    console.log(value);
+    await db.query(
+      `INSERT INTO book (id, stock) VALUES ${value} AS importbook(id, qty) ON DUPLICATE KEY UPDATE stock = stock + qty;`,
+      function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        res.send({ result });
+      }
+    );
+  },
 };
 
 module.exports = {
