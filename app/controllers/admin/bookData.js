@@ -137,6 +137,33 @@ const bookDataController = {
     } else res.send({ message: "book id gone" });
   },
 
+  async getBookStock(req, res) {
+    await db.query(
+      "SELECT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id",
+      function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        res.send({ result });
+      }
+    );
+  },
+
+  async searchBookStock(req, res) {
+    if (req.params.input != undefined) {
+      const input = req.params.input;
+      var sql = `SELECT DISTINCT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id WHERE bookID LIKE "%${input}%";`;
+      await db.query(sql, function (err, result) {
+        if (err) {
+          res.send({ err: err });
+        }
+        if (result.length > 0) {
+          res.send({ result });
+        } else res.send({ message: "No data" });
+      });
+    }
+  },
+
   async importBookStock(req, res) {
     const { data } = req.body;
     let value = "";
@@ -146,14 +173,38 @@ const bookDataController = {
         value += ")";
       } else value += "), ";
     }
-    console.log(value);
     await db.query(
       `INSERT INTO book (id, stock) VALUES ${value} AS importbook(id, qty) ON DUPLICATE KEY UPDATE stock = stock + qty;`,
-      function (err, result) {
+      async function (err, result) {
         if (err) {
           res.send({ err: err });
         }
-        res.send({ result });
+        if (result.affectedRows) {
+          let value = "";
+          for (var i = 0; i < data.length; i++) {
+            value +=
+              "(" +
+              data[i].id +
+              ", " +
+              data[i].qty +
+              ", " +
+              data[i].importPrice +
+              ", " +
+              '"add"';
+            if (i === data.length - 1) {
+              value += ")";
+            } else value += "), ";
+          }
+          await db.query(
+            `INSERT INTO stockitem (bookID, quantity, price, stockType) VALUES ${value};`,
+            function (err, result, fields) {
+              if (err) {
+                res.send({ err: err });
+              }
+              res.send({ result });
+            }
+          );
+        }
       }
     );
   },

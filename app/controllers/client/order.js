@@ -3,7 +3,6 @@ const { CartSum } = require("../../util/totalSum");
 
 const orderController = {
   async addOrder(req, res) {
-    // console.log(req.body);
     const { accountID } = req.body;
     const {
       name,
@@ -58,17 +57,43 @@ const orderController = {
           }
           await db.query(
             `INSERT INTO orderitem (bookID, orderID, discount, quantity) VALUES ${value};`,
-            function (err, result, fields) {
+            async function (err, result, fields) {
               if (err) {
                 res.send({ err: err });
-              } else
-                res.send({
-                  orderData: req.body,
-                  orderID: orderID,
-                  total: total,
-                  date: date,
-                  success: true,
-                });
+              } else if (result.affectedRows) {
+                let value = "";
+                let newPrice = 0;
+                for (var i = 0; i < data.length; i++) {
+                  newPrice = (data[i].price * (100 - data[i].discount)) / 100;
+                  value +=
+                    "(" +
+                    data[i].id +
+                    ", " +
+                    data[i].qty +
+                    ", " +
+                    newPrice +
+                    ", " +
+                    '"buy"';
+                  if (i === data.length - 1) {
+                    value += ")";
+                  } else value += "), ";
+                }
+                await db.query(
+                  `INSERT INTO stockitem (bookID, quantity, price, stockType) VALUES ${value};`,
+                  function (err, result, fields) {
+                    if (err) {
+                      res.send({ err: err });
+                    }
+                  }
+                );
+              }
+              res.send({
+                orderData: req.body,
+                orderID: orderID,
+                total: total,
+                date: date,
+                success: true,
+              });
             }
           );
         }
