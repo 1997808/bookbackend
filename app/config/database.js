@@ -1,7 +1,8 @@
 const mysql = require("mysql");
 const { host, user, password, database } = require("../config/config");
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
+  connectionLimit: 10,
   host: host,
   user: user,
   password: password,
@@ -11,9 +12,9 @@ const db = mysql.createConnection({
   dateStrings: true,
 });
 
-db.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+// db.connect(function (err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+// });
 
 module.exports = db;
