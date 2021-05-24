@@ -35,7 +35,6 @@ const bookDataController = {
             size,
             price,
             discount,
-            stock,
             description,
           } = req.body;
           db.query(
@@ -51,7 +50,7 @@ const bookDataController = {
               size,
               price,
               discount,
-              stock,
+              0,
               description,
             ],
             function (err, result) {
@@ -111,7 +110,6 @@ const bookDataController = {
         size,
         price,
         discount,
-        stock,
         description,
       } = req.body;
 
@@ -124,7 +122,7 @@ const bookDataController = {
           }
           if (result.length > 0) {
             await db.query(
-              `UPDATE book SET categoryID = "${categoryID}", name = "${name}", image = "${image}", author = "${author}", translator = "${translator}", publisher = "${publisher}", pages = ${pages}, size = "${size}", price = ${price}, discount = ${discount}, stock = ${stock}, description='${description}' WHERE id = ${id};`,
+              `UPDATE book SET categoryID = "${categoryID}", name = "${name}", image = "${image}", author = "${author}", translator = "${translator}", publisher = "${publisher}", pages = ${pages}, size = "${size}", price = ${price}, discount = ${discount}, description='${description}' WHERE id = ${id};`,
               function (err, result) {
                 if (err) {
                   res.send({ err: err });
