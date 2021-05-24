@@ -1,5 +1,6 @@
 const db = require("../../config/database");
 const { CartSum } = require("../../util/totalSum");
+const { LocalDate } = require("../../util/getLocalDate");
 
 const orderController = {
   async addOrder(req, res) {
@@ -16,7 +17,7 @@ const orderController = {
     } = req.body.formData;
     const { data } = req.body;
 
-    var date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    var date = LocalDate();
     var total = CartSum(data);
 
     await db.query(
@@ -73,13 +74,16 @@ const orderController = {
                     ", " +
                     newPrice +
                     ", " +
-                    '"buy"';
+                    '"buy"' +
+                    ", " +
+                    `"${date}"`;
                   if (i === data.length - 1) {
                     value += ")";
                   } else value += "), ";
                 }
+                console.log(value);
                 await db.query(
-                  `INSERT INTO stockitem (bookID, quantity, price, stockType) VALUES ${value};`,
+                  `INSERT INTO stockitem (bookID, quantity, price, stockType, date) VALUES ${value};`,
                   function (err, result, fields) {
                     if (err) {
                       res.send({ err: err });

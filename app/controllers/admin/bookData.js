@@ -1,4 +1,5 @@
 const db = require("../../config/database");
+const { LocalDate } = require("../../util/getLocalDate");
 
 const bookDataController = {
   async getAllBook(req, res) {
@@ -139,7 +140,7 @@ const bookDataController = {
 
   async getBookStock(req, res) {
     await db.query(
-      "SELECT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id",
+      "SELECT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id ORDER BY date DESC",
       function (err, result) {
         if (err) {
           res.send({ err: err });
@@ -152,7 +153,7 @@ const bookDataController = {
   async searchBookStock(req, res) {
     if (req.params.input != undefined) {
       const input = req.params.input;
-      var sql = `SELECT DISTINCT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id WHERE bookID LIKE "%${input}%";`;
+      var sql = `SELECT DISTINCT * FROM stockitem LEFT JOIN (SELECT id, name FROM book) as A ON stockitem.bookID = A.id WHERE bookID LIKE "%${input}%" ORDER BY date DESC;`;
       await db.query(sql, function (err, result) {
         if (err) {
           res.send({ err: err });
@@ -181,6 +182,7 @@ const bookDataController = {
         }
         if (result.affectedRows) {
           let value = "";
+          var date = LocalDate();
           for (var i = 0; i < data.length; i++) {
             value +=
               "(" +
@@ -190,13 +192,15 @@ const bookDataController = {
               ", " +
               data[i].importPrice +
               ", " +
-              '"add"';
+              '"add"' +
+              ", " +
+              `"${date}"`;
             if (i === data.length - 1) {
               value += ")";
             } else value += "), ";
           }
           await db.query(
-            `INSERT INTO stockitem (bookID, quantity, price, stockType) VALUES ${value};`,
+            `INSERT INTO stockitem (bookID, quantity, price, stockType, date) VALUES ${value};`,
             function (err, result, fields) {
               if (err) {
                 res.send({ err: err });

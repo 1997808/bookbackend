@@ -8,6 +8,7 @@ const db = mysql.createConnection({
   insecureAuth: true,
   database: database,
   charset: "utf8mb4",
+  dateStrings: true,
 });
 
 db.connect(function (err) {
