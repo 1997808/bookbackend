@@ -81,7 +81,6 @@ const orderController = {
                     value += ")";
                   } else value += "), ";
                 }
-                console.log(value);
                 await db.query(
                   `INSERT INTO stockitem (bookID, quantity, price, stockType, date) VALUES ${value};`,
                   function (err, result, fields) {
