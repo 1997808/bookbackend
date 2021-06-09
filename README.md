@@ -1,58 +1,58 @@
 Lấy thông tin toàn bộ người dùng
-Get("/user", verifyJWT);
+Get("/admin/user", verifyJWT);
 
 Tìm người dùng
-Get("/searchuser/:input", verifyJWT);
+Get("/admin/searchuser/:input", verifyJWT);
 input: id / phone: number
 
 Lấy danh mục
-Get("/category", verifyJWT)
+Get("/admin/category", verifyJWT)
 
 Tạo danh mục mới
-Post("/category", verifyJWT);
+Post("/admin/category", verifyJWT);
 
 Lấy toàn bộ sách
-Get("/book", verifyJWT);
+Get("/admin/book", verifyJWT);
 
 Lấy chi tiết 1 quyển sách
-Get("/book/:id", verifyJWT);
+Get("/admin/book/:id", verifyJWT);
 id: number
 
 Đổi dữ liệu 1 quyển sách
-Put("/book/:id", verifyJWT);
+Put("/admin/book/:id", verifyJWT);
 id: number
 
 Thêm sách
-Post("/book", verifyJWT);
+Post("/admin/book", verifyJWT);
 
 Tìm sách
-Get("/searchbook/:input");
+Get("/admin/searchbook/:input");
 input: id / name
 
 Lấy toàn bộ hóa đơn
-Get("/order", verifyJWT);
+Get("/admin/order", verifyJWT);
 
 Lấy chi tiết 1 hóa đơn
-Get("/order/:id", verifyJWT);
+Get("/admin/order/:id", verifyJWT);
 
 Lấy sản phẩm của 1 hóa đơn
-Get("/orderitem/:id", verifyJWT);
+Get("/admin/orderitem/:id", verifyJWT);
 
 Lấy toàn bộ sản phẩm bán được
-Get("/orderitem", verifyJWT);
+Get("/admin/orderitem", verifyJWT);
 
 Tìm hóa đơn
-Get("/searchorder/:input", verifyJWT);
+Get("/admin/searchorder/:input", verifyJWT);
 input: id / phone
 
 Nhập kho
-Post("/import", verifyJWT);
+Post("/admin/import", verifyJWT);
 
 Lấy thay đổi trong kho
-Get("/stock", verifyJWT);
+Get("/admin/stock", verifyJWT);
 
 Lấy thay đổi trong kho của sản phẩm cần tìm
-Get("/stock/:input", verifyJWT);
+Get("/admin/stock/:input", verifyJWT);
 input: bookID
 
 USER
